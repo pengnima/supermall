@@ -26,6 +26,7 @@ body {
 
 /**
  * Render the `main` element consistently in IE.
+ 兼容IE的main
  */
 
 main {

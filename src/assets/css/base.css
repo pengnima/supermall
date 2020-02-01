@@ -1,0 +1,60 @@
+@import "./normalize.css";
+
+:root {
+  --color-text: #666;
+  /* 高亮颜色 */
+  --color-high-text: #ff5777;
+  /* 整体背景颜色 */
+  --color-tint: #ff8198;
+  --color-background: #fff;
+  --font-size: 14px;
+  --line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 
+  -webkit-tap-highlight-color
+    这个属性只用于iOS (iPhone和iPad)。
+    当你点击一个链接或者通过Javascript定义的可点击元素的时候，它就会出现一个半透明的灰色背景。
+    想要禁用这个高亮，设置颜色的alpha值为0即可。 
+*/
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  user-select: none; /* 禁止用户鼠标在页面上选中文字/图片等 */
+  -webkit-tap-highlight-color: transparent; /* webkit是苹果浏览器引擎，tap是点击，highlight是背景高亮，color颜色，颜色用数值调节 */
+  background: var(--color-background);
+  width: 100vw;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clear-fix::after {
+  clear: both;
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.clear-fix {
+  zoom: 1; /* IE浏览器的缩放，其他浏览器可能不可以用 */
+}
+
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}

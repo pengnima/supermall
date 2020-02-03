@@ -2,7 +2,7 @@
   <div>
     <swiper>
       <template>
-        <swiper-item v-for="(item, index) in sun_banners" :key="index">
+        <swiper-item v-for="(item, index) in sun_banners" :key="item.acm">
           <template>
             <a :href="item.link"><img :src="item.image" alt=""/></a>
           </template>

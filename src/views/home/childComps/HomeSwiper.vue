@@ -15,9 +15,7 @@
 import { Swiper, SwiperItem } from "components/common/swiper";
 export default {
   props: {
-    sun_banners: {
-      type: Array
-    }
+    sun_banners: Array
   },
   data() {
     return {};

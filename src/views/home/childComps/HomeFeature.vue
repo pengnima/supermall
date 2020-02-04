@@ -1,6 +1,6 @@
 <template>
   <div class="feature">
-    <a href="">
+    <a href="http://localhost:8080/home/#feature">
       <img src="~assets/img/home/recommend_bg.jpg" alt="" />
     </a>
   </div>

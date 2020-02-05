@@ -5,15 +5,28 @@
         <div>首页</div>
       </template>
     </nav-bar>
-    <home-swiper :sun_banners="banners"></home-swiper>
-    <home-recommends :sun_recommends="recommends"></home-recommends>
-    <home-feature></home-feature>
-    <tab-control
-      :titles="['流行', '新款', '潮流']"
-      class="home_tab_control"
-      @tabEvent="tabClick"
-    ></tab-control>
-    <goods-list :sun_goods="goods[this.currType].list"></goods-list>
+    <scroll
+      class="wrapper"
+      ref="scroll"
+      :probe-type="3"
+      :pull-up-load="true"
+      @scrollEvent="contentScroll"
+      @pullingUpEvent="loadMore"
+    >
+      <template>
+        <home-swiper :sun_banners="banners"></home-swiper>
+        <home-recommends :sun_recommends="recommends"></home-recommends>
+        <home-feature></home-feature>
+        <tab-control
+          :titles="['流行', '新款', '潮流']"
+          class="home_tab_control"
+          @tabEvent="tabClick"
+        ></tab-control>
+        <goods-list :sun_goods="goods[this.currType].list"></goods-list>
+      </template>
+    </scroll>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -23,8 +36,10 @@ import HomeRecommends from "./childComps/HomeRecommends.vue";
 import HomeFeature from "./childComps/HomeFeature.vue";
 
 import NavBar from "components/common/navbar/NavBar.vue";
+import Scroll from "components/common/scroll/Scroll.vue";
 import TabControl from "components/content/tabControl/TabControl.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
+import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
@@ -33,6 +48,8 @@ export default {
     NavBar,
     TabControl,
     GoodsList,
+    Scroll,
+    BackTop,
 
     HomeSwiper,
     HomeRecommends,
@@ -47,7 +64,8 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currType: "pop"
+      currType: "pop",
+      isShowBackTop: false
     };
   },
   //利用生命周期函数，组件创建，就发送网络请求
@@ -61,12 +79,30 @@ export default {
   },
   methods: {
     /**
+     * 该组件的事件
+     */
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    loadMore() {
+      //下拉加载更多goods，但是会有bug，该bug由于DOM高度问题
+      //图片的DOM高度是异步加载的，所以没那么快能加载出来，会导致scroll的高度跟不上
+      this.getHomeGoods(this.currType);
+
+      setTimeout(() => {
+        this.$refs.scroll.finishPullUp();
+      }, 2000);
+    },
+
+    /**
      * 发射事件相关
      */
     tabClick(index) {
       this.currType = ["pop", "new", "sell"][index];
     },
-
+    contentScroll(pos) {
+      this.isShowBackTop = pos.y < -1000;
+    },
     /**
      * 网络相关
      */
@@ -94,8 +130,15 @@ export default {
 </script>
 <style scoped>
 #home {
-  padding-top: 44px;
-  padding-bottom: 49px;
+  /**
+  * 有了BS之后，可以不需要这2个 
+  * padding-top: 44px;
+  * padding-bottom: 49px;
+  * 下方BS的.wrapper样式里就有 top44 bottom49
+  */
+  /* 一定要有home的高度，否则其子对象wrapper无法正确显示 */
+  height: 100vh;
+  position: relative;
 }
 .home-nav {
   background-color: var(--color-tint);
@@ -106,9 +149,23 @@ export default {
   z-index: 9;
   width: 100%;
 }
-.home_tab_control {
-  position: sticky;
+
+/**
+  * 由于用了better-scroll已经失效
+  * .home_tab_control {
+  *   position: sticky;
+  *   top: 44px;
+  *   z-index: 9; 
+  * }
+  */
+
+.wrapper {
+  /* height: 100vh; */
+  position: absolute;
+  left: 0;
+  right: 0;
   top: 44px;
-  z-index: 9;
+  bottom: 49px;
+  overflow: hidden;
 }
 </style>

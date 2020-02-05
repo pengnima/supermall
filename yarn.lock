@@ -768,6 +768,25 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@better-scroll/core@^2.0.0-beta.4":
+  version "2.0.0-beta.4"
+  resolved "https://registry.npm.taobao.org/@better-scroll/core/download/@better-scroll/core-2.0.0-beta.4.tgz#c3dbdbbb4880d6b84211a8e503e692d1016dbb9d"
+  integrity sha1-w9vbu0iA1rhCEajlA+aS0QFtu50=
+  dependencies:
+    "@better-scroll/shared-utils" "^2.0.0-beta.4"
+
+"@better-scroll/pull-up@^2.0.0-beta.4":
+  version "2.0.0-beta.4"
+  resolved "https://registry.npm.taobao.org/@better-scroll/pull-up/download/@better-scroll/pull-up-2.0.0-beta.4.tgz#7522c6ad2f3ca6e2b49f8547fd12b06c546994b7"
+  integrity sha1-dSLGrS88puK0n4VH/RKwbFRplLc=
+  dependencies:
+    "@better-scroll/core" "^2.0.0-beta.4"
+
+"@better-scroll/shared-utils@^2.0.0-beta.4":
+  version "2.0.0-beta.4"
+  resolved "https://registry.npm.taobao.org/@better-scroll/shared-utils/download/@better-scroll/shared-utils-2.0.0-beta.4.tgz#dc17c056b8c3e63257ca8171054a0dbc61f2d35c"
+  integrity sha1-3BfAVrjD5jJXyoFxBUoNvGHy01w=
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npm.taobao.org/@hapi/address/download/@hapi/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"

@@ -43,12 +43,13 @@ export default {
     }
   },
   mounted() {
+    //为了让swiper里的DOM真正创建好，加了100ms延时
     setTimeout(() => {
       this.initDom();
       if (this.slideCount > 1) {
         this.moveAuto();
       }
-    }, 500);
+    }, 100);
   },
   methods: {
     // 1. 初始化DOM，并获取必要的数据
@@ -117,8 +118,8 @@ export default {
       }
     },
 
-    /* 
-    触屏事件 
+    /*
+    触屏事件
     */
     touchStart(e) {
       clearInterval(this.moveTimer);

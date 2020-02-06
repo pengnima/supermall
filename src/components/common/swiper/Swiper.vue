@@ -24,12 +24,12 @@ export default {
   data() {
     return {
       currIndex: 1,
-      slideCount: 0,
       swiperStyle: {}, //swiper样式
       slideWidth: null, //一张slide的宽度
       moveTimer: null,
       startPos: 0,
-      distance: 0
+      distance: 0,
+      slideCount: 0
     };
   },
   props: {
@@ -42,15 +42,7 @@ export default {
       default: 300
     }
   },
-  mounted() {
-    //为了让swiper里的DOM真正创建好，加了100ms延时
-    setTimeout(() => {
-      this.initDom();
-      if (this.slideCount > 1) {
-        this.moveAuto();
-      }
-    }, 100);
-  },
+  mounted() {},
   methods: {
     // 1. 初始化DOM，并获取必要的数据
     initDom() {
@@ -59,7 +51,7 @@ export default {
       this.swiperStyle = swiperEl.style;
       this.slideCount = slides.length;
       this.slideWidth = swiperEl.offsetWidth;
-      //如果slider数量大于1，那么往前后插入图片，方便滚动操作
+
       if (this.slideCount > 1) {
         let firstSlide = slides[0].cloneNode(true);
         let lastSlide = slides[this.slideCount - 1].cloneNode(true);

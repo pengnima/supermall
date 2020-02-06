@@ -1,10 +1,17 @@
 <template>
   <div>
-    <swiper>
+    <swiper ref="swiper">
       <template>
-        <swiper-item v-for="(item, index) in sun_banners" :key="item.acm">
+        <swiper-item
+          v-for="(item, index) in sun_banners"
+          :key="index"
+          @slideEven="slideLoadOn"
+          :count="sun_banners.length"
+        >
           <template>
-            <a :href="item.link"><img :src="item.image" alt=""/></a>
+            <a :href="item.link"
+              ><img :src="item.image" alt="" @load="SwiperImgLoad"
+            /></a>
           </template>
         </swiper-item>
       </template>
@@ -14,11 +21,27 @@
 <script>
 import { Swiper, SwiperItem } from "components/common/swiper";
 export default {
+  data() {
+    return { loadCheck: false };
+  },
   props: {
     sun_banners: Array
   },
-  data() {
-    return {};
+  mounted() {},
+  methods: {
+    /**
+     * 加载函数
+     */
+    SwiperImgLoad() {
+      if (!this.loadCheck) {
+        this.$emit("SwiperImgLoadEvent");
+        this.loadCheck = true;
+      }
+    },
+    slideLoadOn() {
+      this.$refs.swiper.initDom();
+      this.$refs.swiper.moveAuto();
+    }
   },
   components: {
     Swiper,

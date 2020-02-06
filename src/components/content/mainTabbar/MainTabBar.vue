@@ -74,7 +74,7 @@ export default {
           否则会认为监听的是来自Item组件自定义的事件
           div,button不是自定义组件，所以可以直接绑定原生事件(即 @click)
       */
-      console.log("自定义组件实例通过@click.native触发原生事件", x);
+      //console.log("自定义组件实例通过@click.native触发原生事件", x);
     }
   }
 };

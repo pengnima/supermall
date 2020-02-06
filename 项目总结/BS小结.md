@@ -100,6 +100,8 @@
    ```
 2. scrollTo(xPos, yPos, ms )
    > 在 ms 时到达 xPos,yPos 的位置
+3. refresh()
+   > 刷新一次，重新计算 scroll 高度
 
 ### 插件
 

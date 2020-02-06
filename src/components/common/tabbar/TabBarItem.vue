@@ -35,7 +35,7 @@ export default {
     itemClick() {
       /* 通过父组件传值给子组件，改变其path属性 */
       if (this.$route.path != this.path) {
-        console.log("切换路由，路由的值根据父传子 props", this.path);
+        //console.log("切换路由，路由的值根据父传子 props", this.path);
         this.$router.push(this.path);
       }
     }

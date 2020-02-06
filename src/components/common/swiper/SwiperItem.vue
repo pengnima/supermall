@@ -4,7 +4,19 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: {
+    count: 0
+  },
+  mounted() {
+    // 下方防止在网速慢的情况下，slide的count数不准确
+    this.$store.commit("slideCountChange", 1);
+    if (this.$store.state.slideCount == this.count) {
+      this.$emit("slideEven");
+      this.$store.commit("slideCountChange", -4);
+    }
+  }
+};
 </script>
 <style>
 .slide {

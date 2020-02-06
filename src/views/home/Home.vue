@@ -5,6 +5,13 @@
         <div>首页</div>
       </template>
     </nav-bar>
+    <tab-control
+      :titles="['流行', '新款', '潮流']"
+      @tabEvent="tabClick"
+      v-show="topCheck"
+      class="top_tab_control"
+      ref="tabControl2"
+    ></tab-control>
     <scroll
       class="wrapper"
       ref="scroll"
@@ -14,13 +21,16 @@
       @pullingUpEvent="loadMore"
     >
       <template>
-        <home-swiper :sun_banners="banners"></home-swiper>
+        <home-swiper
+          :sun_banners="banners"
+          @SwiperImgLoadEvent="SwiperImgLoad"
+        ></home-swiper>
         <home-recommends :sun_recommends="recommends"></home-recommends>
         <home-feature></home-feature>
         <tab-control
           :titles="['流行', '新款', '潮流']"
-          class="home_tab_control"
           @tabEvent="tabClick"
+          ref="tabControl1"
         ></tab-control>
         <goods-list :sun_goods="goods[this.currType].list"></goods-list>
       </template>
@@ -43,7 +53,11 @@ import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
+//防抖函数在其他组件中也会用到，所以房 common里的工具函数里
+import { deBounce } from "common/utils.js";
+
 export default {
+  name: "home",
   components: {
     NavBar,
     TabControl,
@@ -65,7 +79,9 @@ export default {
         sell: { page: 0, list: [] }
       },
       currType: "pop",
-      isShowBackTop: false
+      isShowBackTop: false,
+      tabControloffsetTop: 0,
+      topCheck: false
     };
   },
   //利用生命周期函数，组件创建，就发送网络请求
@@ -76,6 +92,21 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+    console.log("请求一次~");
+  },
+  mounted() {
+    // 防抖
+    let deBounceRefresh = deBounce(this.$refs.scroll.refresh, 200);
+
+    this.$bus.$on("goodsImgLoadEvent", () => {
+      //利用 $bus 事件监听，去刷新 scroll的高度
+      deBounceRefresh();
+    });
+  },
+
+  beforeDestroy() {
+    this.$bus.$off("goodsImgLoadEvent");
+    console.log("beforeDestroy");
   },
   methods: {
     /**
@@ -87,8 +118,11 @@ export default {
     loadMore() {
       //下拉加载更多goods，但是会有bug，该bug由于DOM高度问题
       //图片的DOM高度是异步加载的，所以没那么快能加载出来，会导致scroll的高度跟不上
+      //如何解决？
+      //让img每次加载完之后，就refresh()一次滚动条
       this.getHomeGoods(this.currType);
 
+      console.log("上拉了");
       setTimeout(() => {
         this.$refs.scroll.finishPullUp();
       }, 2000);
@@ -99,10 +133,20 @@ export default {
      */
     tabClick(index) {
       this.currType = ["pop", "new", "sell"][index];
+      //同步2个tabControl的点击 变红
+      this.$refs.tabControl1.currIndex = index;
+      this.$refs.tabControl2.currIndex = index;
     },
     contentScroll(pos) {
-      this.isShowBackTop = pos.y < -1000;
+      //滚动条实时监听
+      this.isShowBackTop = -pos.y > 1000;
+      this.topCheck = -pos.y > this.tabControloffsetTop;
     },
+    SwiperImgLoad() {
+      //等到 swiper的图片加载好之后
+      this.tabControloffsetTop = this.$refs.tabControl1.$el.offsetTop;
+    },
+
     /**
      * 网络相关
      */
@@ -128,6 +172,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 #home {
   /**
@@ -143,11 +188,13 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-  position: fixed;
+  /**
+  * 原生滚动时，需要这个，有了BS，就不用下面的了
+  *position: fixed;
   left: 0;
   top: 0;
   z-index: 9;
-  width: 100%;
+  width: 100%; */
 }
 
 /**
@@ -158,7 +205,10 @@ export default {
   *   z-index: 9; 
   * }
   */
-
+.top_tab_control {
+  position: relative;
+  z-index: 9;
+}
 .wrapper {
   /* height: 100vh; */
   position: absolute;

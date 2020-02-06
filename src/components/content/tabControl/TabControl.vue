@@ -21,7 +21,6 @@ export default {
   },
   methods: {
     itemClick(index) {
-      this.currIndex = index;
       this.$emit("tabEvent", index);
     }
   }
@@ -40,7 +39,7 @@ export default {
   line-height: 40px;
 }
 .tab_control_item span {
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 .tab_control_item span.active {
   border-bottom: 3px solid var(--color-high-text);

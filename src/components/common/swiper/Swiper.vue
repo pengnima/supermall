@@ -44,6 +44,13 @@ export default {
   },
   mounted() {},
   methods: {
+    // 0. 启动函数
+    slideOn() {
+      this.initDom();
+      if (this.slideCount > 1) {
+        this.moveAuto();
+      }
+    },
     // 1. 初始化DOM，并获取必要的数据
     initDom() {
       let swiperEl = document.querySelector(".swiper");
@@ -114,29 +121,41 @@ export default {
     触屏事件
     */
     touchStart(e) {
-      clearInterval(this.moveTimer);
-      this.startPos = e.touches[0].pageX;
+      if (this.slideCount > 1) {
+        clearInterval(this.moveTimer);
+        this.startPos = e.touches[0].pageX;
+      }
     },
     touchMove(e) {
-      let movePos = e.touches[0].pageX;
-      this.distance = movePos - this.startPos;
-      let moveDistance = -(this.currIndex * this.slideWidth) + this.distance;
-      this.setTransform(moveDistance);
+      if (this.slideCount > 1) {
+        let movePos = e.touches[0].pageX;
+        this.distance = movePos - this.startPos;
+        let moveDistance = -(this.currIndex * this.slideWidth) + this.distance;
+        this.setTransform(moveDistance);
+      }
     },
     touchEnd(e) {
-      let _Dis = Math.abs(this.distance); //绝对值求出移动的距离
+      if (this.slideCount > 1) {
+        let _Dis = Math.abs(this.distance); //绝对值求出移动的距离
 
-      if (this.distance == 0) {
-        return;
-      } else if (this.distance > 0 && _Dis > this.slideWidth * this.moveRatio) {
-        this.currIndex--;
-      } else if (this.distance < 0 && _Dis > this.slideWidth * this.moveRatio) {
-        this.currIndex++;
+        if (this.distance == 0) {
+          return;
+        } else if (
+          this.distance > 0 &&
+          _Dis > this.slideWidth * this.moveRatio
+        ) {
+          this.currIndex--;
+        } else if (
+          this.distance < 0 &&
+          _Dis > this.slideWidth * this.moveRatio
+        ) {
+          this.currIndex++;
+        }
+        //在触碰结束时，由于会触碰第一张或者最后一张，所以需要来一个滚动检测
+        this.scrollCheck();
+        //上述检测完毕，让其在正确位置之后，在执行 自动翻滚
+        this.moveAuto();
       }
-      //在触碰结束时，由于会触碰第一张或者最后一张，所以需要来一个滚动检测
-      this.scrollCheck();
-      //上述检测完毕，让其在正确位置之后，在执行 自动翻滚
-      this.moveAuto();
     }
   }
 };

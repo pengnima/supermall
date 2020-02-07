@@ -13,7 +13,7 @@ export default {
     this.$store.commit("slideCountChange", 1);
     if (this.$store.state.slideCount == this.count) {
       this.$emit("slideEven");
-      this.$store.commit("slideCountChange", -4);
+      this.$store.commit("slideCountChange", -this.count);
     }
   }
 };

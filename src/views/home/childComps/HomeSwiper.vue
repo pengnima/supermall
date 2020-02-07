@@ -39,8 +39,7 @@ export default {
       }
     },
     slideLoadOn() {
-      this.$refs.swiper.initDom();
-      this.$refs.swiper.moveAuto();
+      this.$refs.swiper.slideOn();
     }
   },
   components: {

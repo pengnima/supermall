@@ -36,6 +36,7 @@ export default {
     },
     refresh() {
       this.scroll.refresh();
+      console.log(this.scroll);
     }
   },
   mounted() {
@@ -47,7 +48,7 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     });
-
+    console.log(this.scroll);
     //监听滚动
     if (this.probeType != 0) {
       this.scroll.on("scroll", pos => {

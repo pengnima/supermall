@@ -173,17 +173,17 @@ export default {
 .bullet {
   display: flex;
   position: absolute;
-  bottom: 10px;
+  bottom: 0.42rem;
   /* 下方2个配合起来可以达到让弹性盒子子元素真正居中 */
   justify-content: center;
   width: 100%;
 }
 .bullet_item {
-  width: 8px;
-  height: 8px;
+  width: 0.34rem;
+  height: 0.34rem;
   background-color: white;
-  margin: 0 5px;
-  border-radius: 4px;
+  margin: 0 0.21rem;
+  border-radius: 0.17rem;
 }
 .bullet_item.active {
   background-color: rgba(212, 62, 46, 1);

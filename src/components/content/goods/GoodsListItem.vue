@@ -26,21 +26,21 @@ export default {
 
 <style scoped>
 .goods_item {
-  padding: 5px;
+  padding: 0.21rem;
   width: 48%;
   position: relative;
-  padding-bottom: 40px;
+  padding-bottom: 1.68rem;
 }
 .goods_item img {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 0.21rem;
 }
 .goods_info {
   /* 信息 */
-  font-size: 14px;
+  font-size: 0.64rem;
   text-align: center;
   position: absolute;
-  bottom: 5px;
+  bottom: 0.21rem;
   left: 0;
   right: 0;
 }
@@ -53,17 +53,17 @@ export default {
 .price {
   /* 价格 */
   color: var(--color-high-text);
-  margin-right: 20px;
+  margin-right: 0.85rem;
 }
 
 .collect::before {
   display: inline-block;
   content: "";
-  background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
+  background: url("~assets/img/common/collect.svg") 0 0/0.6rem 0.6rem;
   position: relative;
-  top: 1px;
-  right: 2px;
-  height: 14px;
-  width: 14px;
+  top: 0.04rem;
+  right: 0.08rem;
+  height: 0.6rem;
+  width: 0.6rem;
 }
 </style>

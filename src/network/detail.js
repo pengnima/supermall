@@ -36,3 +36,12 @@ export class Shop {
     this.name = shopInfo.name;
   }
 }
+
+/* export class Detail {
+  constructor(detailInfo, detailImage = detailInfo.detailImage) {
+    this.imgs = detailImage[0].list;
+    this.key = detailImage[0].key;
+    this.desc = detailInfo.desc;
+  }
+}
+ */

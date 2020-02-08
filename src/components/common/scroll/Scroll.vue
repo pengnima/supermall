@@ -28,6 +28,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * BS的一些方法
+     */
     scrollTo(x, y, time = 500) {
       this.scroll.scrollTo(x, y, time);
     },
@@ -36,7 +39,7 @@ export default {
     },
     refresh() {
       this.scroll.refresh();
-      console.log(this.scroll);
+      console.log("刷新一次");
     }
   },
   mounted() {
@@ -48,7 +51,8 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     });
-    console.log(this.scroll);
+    //console.log(this.scroll);
+
     //监听滚动
     if (this.probeType != 0) {
       this.scroll.on("scroll", pos => {

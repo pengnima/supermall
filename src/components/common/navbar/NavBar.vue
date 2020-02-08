@@ -17,14 +17,15 @@ export default {};
 <style scoped>
 .nav-bar {
   display: flex;
-  height: 44px;
-  line-height: 44px;
+  height: 1.9rem;
+  line-height: 1.9rem;
   text-align: center;
-  box-shadow: 0px 1px 1px rgba(100, 100, 100, 0.5);
+  box-shadow: 0px 0.04rem 2px rgba(100, 100, 100, 0.5);
+  font-size: 0.768rem;
 }
 .left,
 .right {
-  width: 60px;
+  width: 2.56rem;
 }
 .center {
   flex: 1;

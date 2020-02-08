@@ -214,8 +214,8 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  top: 44px;
-  bottom: 49px;
+  top: 1.9rem;
+  bottom: 2.09rem;
   overflow: hidden;
 }
 </style>

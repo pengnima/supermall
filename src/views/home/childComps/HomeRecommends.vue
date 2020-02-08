@@ -27,14 +27,15 @@ export default {
 .recommend_item {
   flex: 1;
   text-align: center;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  border-bottom: 10px solid #eee;
+  padding-top: 0.42rem;
+  padding-bottom: 0.84rem;
+  border-bottom: 0.42rem solid #eee;
+  font-size: 0.7rem;
 }
 .recommend_item img {
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  margin-bottom: 10px;
+  width: 3.37rem;
+  height: 3.37rem;
+  border-radius: 50%;
+  margin-bottom: 0.42rem;
 }
 </style>

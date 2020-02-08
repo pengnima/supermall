@@ -29,6 +29,6 @@ export default {
 </script>
 <style scoped>
 .detail_swiper {
-  height: 300px;
+  height: 12.8rem;
 }
 </style>

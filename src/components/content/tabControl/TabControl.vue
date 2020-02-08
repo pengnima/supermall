@@ -35,14 +35,15 @@ export default {
 }
 .tab_control_item {
   flex: 1;
-  height: 40px;
-  line-height: 40px;
+  height: 1.68rem;
+  line-height: 1.68rem;
 }
 .tab_control_item span {
-  padding-bottom: 8px;
+  font-size: 0.68rem;
+  padding-bottom: 0.26rem;
 }
 .tab_control_item span.active {
-  border-bottom: 3px solid var(--color-high-text);
+  border-bottom: 0.13rem solid var(--color-high-text);
   color: var(--color-high-text);
 }
 </style>

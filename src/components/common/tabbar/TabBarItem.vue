@@ -47,13 +47,13 @@ export default {
   /* display:flex 只针对子标签，所以在<template #default>下面只能有一个 子标签，如果外层套了一层div，则无用 */
   flex: 1;
   text-align: center;
-  height: 49px;
-  font-size: 15px;
+  height: 2.09rem;
+  font-size: 0.64rem;
 }
 .tab-bar-item img {
-  width: 24px;
-  height: 24px;
-  margin-top: 3px;
+  width: 1.024rem;
+  height: 1.024rem;
+  margin-top: 0.126rem;
   vertical-align: middle;
 }
 /* .active {

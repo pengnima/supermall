@@ -1,5 +1,5 @@
 <template>
-  <div id="shop_info">
+  <div id="shop_info" v-if="Object.keys(shop).length != 0">
     <div class="shop_name">
       <img :src="shop.logo" alt="" />
       <span>{{ shop.name }}</span>
@@ -9,15 +9,15 @@
       <div class="score_left">
         <div class="score_sell">
           <div>{{ sellValue }}万</div>
-          <div style="font-size: 14px;">总销量</div>
+          <div style="font-size: 0.6rem;">总销量</div>
         </div>
         <div class="score_item">
           <div>{{ shop.goods }}</div>
-          <div style="font-size: 14px;">全部宝贝</div>
+          <div style="font-size: 0.6rem;">全部宝贝</div>
         </div>
       </div>
       <div class="score_right">
-        <table cellspacing="10px">
+        <table>
           <tr v-for="(item, index) in shop.score">
             <td>{{ item.name }}</td>
             <td :style="{ color: item.isBetter ? 'red' : 'green' }">
@@ -40,7 +40,12 @@
 <script>
 export default {
   props: {
-    shop: Object
+    shop: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
   },
   computed: {
     sellValue() {
@@ -59,19 +64,21 @@ export default {
 
 <style scoped>
 #shop_info {
-  padding: 15px 8px;
+  padding: 0.64rem 0.34rem;
+  border-bottom: 0.128rem solid rgba(128, 128, 128, 0.2);
+  font-size: 0.75rem;
 }
 .shop_name img {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(128, 128, 128, 0.5);
-  border-radius: 20px;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 0.042rem solid rgba(128, 128, 128, 0.5);
+  border-radius: 0.85rem;
 }
 .shop_name span {
-  margin-left: 8px;
+  margin-left: 0.34rem;
   position: relative;
-  top: -15px;
-  font-size: 18px;
+  top: -0.64rem;
+  font-size: 0.768rem;
 }
 
 /**
@@ -79,7 +86,7 @@ export default {
   * 可左边用弹性盒子做，右边用table做
   */
 .score_info {
-  padding: 0px 12px;
+  padding: 0px 0.512rem;
   display: flex;
 }
 .score_left,
@@ -99,24 +106,25 @@ export default {
   text-align: center;
 }
 .score_item {
-  border-right: 1px solid gray;
+  border-right: 0.042rem solid gray;
 }
 /**
   * 右边用table做的
   */
 .score_right > table {
   margin: 0 auto;
-  font-size: 15px;
+  font-size: 0.64rem;
+  border-spacing: 0.42rem;
 }
 /**
   * 进店逛逛的样式
   */
 .come_shop {
-  width: 150px;
-  height: 30px;
-  line-height: 30px;
+  width: 6.4rem;
+  height: 1.28rem;
+  line-height: 1.28rem;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 0.42rem;
   background-color: rgba(128, 128, 128, 0.3);
   margin: 0 auto;
 }

@@ -40,51 +40,51 @@ export default {
 </script>
 <style scoped>
 #detail_goods {
-  padding: 10px;
+  padding: 0.42rem;
 }
 .title {
-  font-size: 18px;
+  font-size: 0.768rem;
 }
 
 .info {
-  margin: 10px 0;
+  margin: 0.42rem 0;
 }
 .n_price {
-  font-size: 20px;
+  font-size: 0.85rem;
   color: var(--color-high-text);
 }
 .o_price {
-  margin: 0 5px;
-  font-size: 12px;
+  margin: 0 0.21rem;
+  font-size: 0.512rem;
   color: gray;
 }
 .discount {
   color: white;
-  font-size: 14px;
-  padding: 3px;
-  border-radius: 5px;
+  font-size: 0.6rem;
+  padding: 0.128rem;
+  border-radius: 0.21rem;
   position: relative;
-  top: -5px;
+  top: -0.21rem;
 }
 
 .columns {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  padding-bottom: 0.42rem;
+  border-bottom: 0.042rem solid rgba(128, 128, 128, 0.3);
   /* 孩子span继承下面2个样式 */
-  font-size: 14px;
+  font-size: 0.6rem;
   color: gray;
 }
 
 .services {
   display: flex;
-  font-size: 14px;
+  font-size: 0.6rem;
   justify-content: space-between;
-  padding: 20px 0;
-  border-bottom: 3px solid rgba(128, 128, 128, 0.4);
+  padding: 0.85rem 0;
+  border-bottom: 0.128rem solid rgba(128, 128, 128, 0.2);
 }
 .services img {
-  width: 12px;
+  width: 0.512rem;
 }
 </style>

@@ -44,11 +44,16 @@ export default {
 };
 </script>
 <style scoped>
+#detail_nav_bar {
+  position: relative;
+  z-index: 9;
+  background-color: #fff;
+}
 .back img {
-  margin-top: 10px;
+  margin-top: 0.42rem;
 }
 .title {
-  font-size: 15px;
+  font-size: 0.64rem;
   display: flex;
 }
 .title_item {

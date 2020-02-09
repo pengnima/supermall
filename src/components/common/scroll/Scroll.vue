@@ -39,7 +39,6 @@ export default {
     },
     refresh() {
       this.scroll.refresh();
-      console.log("刷新一次");
     }
   },
   mounted() {
@@ -51,12 +50,10 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     });
-    //console.log(this.scroll);
 
     //监听滚动
     if (this.probeType != 0) {
       this.scroll.on("scroll", pos => {
-        //console.log(pos);
         //将pos发送给父组件，让其根据pos修改 backTop组件的显示隐藏
         this.$emit("scrollEvent", pos);
       });

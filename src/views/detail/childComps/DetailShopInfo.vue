@@ -18,7 +18,7 @@
       </div>
       <div class="score_right">
         <table>
-          <tr v-for="(item, index) in shop.score">
+          <tr v-for="(item, index) in shop.score" :key="index">
             <td>{{ item.name }}</td>
             <td :style="{ color: item.isBetter ? 'red' : 'green' }">
               {{ item.score }}
@@ -49,7 +49,8 @@ export default {
   },
   computed: {
     sellValue() {
-      return parseFloat(this.shop.sells / 10000).toFixed(1);
+      /* parseFloat(this.shop.sells / 10000).toFixed(1) */
+      return Math.round((this.shop.sells / 10000) * 10) / 10;
     },
     betterScore(isBetter) {
       if (isBetter) {

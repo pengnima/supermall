@@ -1,6 +1,6 @@
 <template>
   <div class="goods_item" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="" @load="imgLoad" />
+    <img :src="showImg" alt="" @load="imgLoad" />
     <div class="goods_info">
       <p>{{ goodsItem.title }}</p>
       <span class="price">￥{{ goodsItem.price }}</span>
@@ -15,10 +15,24 @@ export default {
   },
   methods: {
     imgLoad() {
+      //可以在home页面中，单独$off掉home的那个事件。
       this.$bus.$emit("goodsImgLoadEvent");
+
+      /* if (this.$route.path.indexOf("home") != -1) {
+        this.$bus.$emit("goodsImgLoadEvent");
+      } else if (this.$route.path.indexOf("detail") != -1) {
+        this.$bus.$emit("detailScrollEvent");
+      } */
     },
     itemClick() {
-      this.$router.push("/detail/" + this.goodsItem.iid);
+      if (this.$route.path.indexOf("home") != -1) {
+        this.$router.push("/detail/" + this.goodsItem.iid);
+      }
+    }
+  },
+  computed: {
+    showImg() {
+      return this.goodsItem.image || this.goodsItem.show.img;
     }
   }
 };

@@ -11,7 +11,7 @@
       v-show="topCheck"
       class="top_tab_control"
       ref="tabControl2"
-    ></tab-control>
+    />
     <scroll
       class="wrapper"
       ref="scroll"
@@ -24,19 +24,19 @@
         <home-swiper
           :sun_banners="banners"
           @SwiperImgLoadEvent="SwiperImgLoad"
-        ></home-swiper>
-        <home-recommends :sun_recommends="recommends"></home-recommends>
-        <home-feature></home-feature>
+        />
+        <home-recommends :sun_recommends="recommends" />
+        <home-feature />
         <tab-control
           :titles="['流行', '新款', '潮流']"
           @tabEvent="tabClick"
           ref="tabControl1"
-        ></tab-control>
-        <goods-list :sun_goods="goods[this.currType].list"></goods-list>
+        />
+        <goods-list :sun_goods="goods[this.currType].list" />
       </template>
     </scroll>
 
-    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -53,8 +53,7 @@ import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
-//防抖函数在其他组件中也会用到，所以房 common里的工具函数里
-import { deBounce } from "common/utils.js";
+import { itemListenerMinxin } from "common/mixin.js";
 
 export default {
   name: "home",
@@ -84,6 +83,7 @@ export default {
       topCheck: false
     };
   },
+  mixins: [itemListenerMinxin],
   //利用生命周期函数，组件创建，就发送网络请求
   created() {
     //1.请求多个数据
@@ -92,21 +92,15 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
-    console.log("请求一次~");
   },
-  mounted() {
-    // 防抖
-    let deBounceRefresh = deBounce(this.$refs.scroll.refresh, 200);
-
-    this.$bus.$on("goodsImgLoadEvent", () => {
-      //利用 $bus 事件监听，去刷新 scroll的高度
-      deBounceRefresh();
-    });
+  mounted() {},
+  activated() {
+    this.$bus.$on("goodsImgLoadEvent", this.bcFunc);
   },
-
-  beforeDestroy() {
-    this.$bus.$off("goodsImgLoadEvent");
-    console.log("beforeDestroy");
+  deactivated() {
+    // 通过给 $off第二参数传递一个函数，可以让其只销毁home里的事件，而不会销毁detail里的事件
+    this.$bus.$off("goodsImgLoadEvent", this.bcFunc);
+    console.log("销毁Home的bus");
   },
   methods: {
     /**
@@ -210,7 +204,6 @@ export default {
   z-index: 9;
 }
 .wrapper {
-  /* height: 100vh; */
   position: absolute;
   left: 0;
   right: 0;

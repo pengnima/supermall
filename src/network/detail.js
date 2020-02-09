@@ -10,6 +10,13 @@ export function getDetail(iid) {
   });
 }
 
+export function getDetailRecommend() {
+  return request({
+    url: "/detail/recommend",
+    methods: "GET"
+  });
+}
+
 export class Goods {
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title;
@@ -37,11 +44,10 @@ export class Shop {
   }
 }
 
-/* export class Detail {
-  constructor(detailInfo, detailImage = detailInfo.detailImage) {
-    this.imgs = detailImage[0].list;
-    this.key = detailImage[0].key;
-    this.desc = detailInfo.desc;
+export class GoodsParam {
+  constructor(info, rule) {
+    this.image = info.images ? info.images[0] : "";
+    this.infos = info.set;
+    this.sizes = rule.tables;
   }
 }
- */

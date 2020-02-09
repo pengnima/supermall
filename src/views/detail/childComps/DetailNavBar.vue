@@ -13,6 +13,7 @@
             v-for="(item, index) in titles"
             :class="{ active: currIndex == index }"
             @click="itemClick(index)"
+            :key="index"
           >
             {{ item }}
           </div>

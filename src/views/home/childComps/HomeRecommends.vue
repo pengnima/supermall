@@ -1,6 +1,10 @@
 <template>
   <div class="recommend">
-    <div class="recommend_item" v-for="item in sun_recommends">
+    <div
+      class="recommend_item"
+      v-for="(item, index) in sun_recommends"
+      :key="index"
+    >
       <a :href="item.link">
         <img :src="item.image" alt="" />
       </a>

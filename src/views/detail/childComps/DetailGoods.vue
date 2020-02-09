@@ -13,11 +13,17 @@
     </div>
 
     <div class="columns">
-      <span v-for="(item, index) in goods.columns">{{ item }}</span>
+      <span v-for="(item, index) in goods.columns" :key="index">{{
+        item
+      }}</span>
     </div>
 
     <div class="services">
-      <div v-for="(item, index) in goods.services" v-if="itemShow(item)">
+      <div
+        v-for="(item, index) in goods.services"
+        v-if="itemShow(item)"
+        :key="index"
+      >
         <img :src="item.icon" alt="" />
         <span>{{ item.name }}</span>
       </div>

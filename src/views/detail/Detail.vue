@@ -1,21 +1,22 @@
 <template>
   <div id="detail">
-    <detail-nav-bar></detail-nav-bar>
+    <detail-nav-bar />
+
     <scroll
       class="detail_wrapper"
       ref="scroll"
       :probe-type="3"
       @scrollEvent="scrollOn"
     >
-      <detail-swiper :topImgs="topImages"></detail-swiper>
-      <detail-goods :goods="goods"></detail-goods>
-      <detail-shop-info :shop="shop"></detail-shop-info>
-      <detail-goods-info
-        :detail-info="detailInfo"
-        @loadImgEvent="loadImgOk"
-      ></detail-goods-info>
+      <detail-swiper :topImgs="topImages" />
+      <detail-goods :goods="goods" />
+      <detail-shop-info :shop="shop" />
+      <detail-goods-info :detail-info="detailInfo" @loadImgEvent="loadImgOk" />
+      <detail-params :paramInfo="paramInfo" />
+      <detail-comment :comment="comment" />
+      <goods-list :sun_goods="recommend"></goods-list>
     </scroll>
-    <back-top v-show="isShowTop" @click.native="backClick"></back-top>
+    <back-top v-show="isShowTop" @click.native="backClick" />
   </div>
 </template>
 <script>
@@ -24,13 +25,22 @@ import DetailSwiper from "./childComps/DetailSwiper.vue";
 import DetailGoods from "./childComps/DetailGoods.vue";
 import DetailShopInfo from "./childComps/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo.vue";
+import DetailParams from "./childComps/DetailParams.vue";
+import DetailComment from "./childComps/DetailComment.vue";
 
-import { getDetail, Goods, Shop } from "network/detail.js";
+import {
+  getDetail,
+  Goods,
+  Shop,
+  GoodsParam,
+  getDetailRecommend
+} from "network/detail.js";
 
 import Scroll from "components/common/scroll/Scroll.vue";
 import BackTop from "components/content/backTop/BackTop.vue";
+import GoodsList from "components/content/goods/GoodsList.vue";
 
-import { deBounce } from "common/utils.js";
+import { itemListenerMinxin } from "common/mixin.js";
 
 export default {
   name: "detail",
@@ -40,9 +50,13 @@ export default {
     DetailGoods,
     DetailShopInfo,
     DetailGoodsInfo,
+    DetailParams,
+    DetailComment,
 
     Scroll,
-    BackTop
+    BackTop,
+
+    GoodsList
   },
   data() {
     return {
@@ -51,19 +65,33 @@ export default {
       goods: {},
       shop: {},
       detailInfo: {},
-      func: null,
-      isShowTop: false
+      paramInfo: {},
+      isShowTop: false,
+      comment: {},
+      recommend: []
     };
   },
   created() {
     this.iid = this.$route.params.iid;
-    console.log(this.iid);
-  },
-  mounted() {
+
+    //详情数据
     this.getDetail(this.iid);
-    this.func = deBounce(this.$refs.scroll.refresh, 200);
+
+    //推荐数据
+    this.getDetailRecommend();
+  },
+  mixins: [itemListenerMinxin],
+  mounted() {
+    this.$bus.$on("goodsImgLoadEvent", this.bcFunc);
+  },
+  beforeDestroy() {
+    this.$bus.$off("goodsImgLoadEvent", this.bcFunc);
+    console.log("销毁Detail的bus");
   },
   methods: {
+    /**
+     * 获取网络数据
+     */
     async getDetail(iid) {
       let res = await getDetail(iid);
       console.log(res);
@@ -83,10 +111,29 @@ export default {
 
         //获取宝贝的详细信息
         this.detailInfo = result.detailInfo;
+
+        //获取商品的参数
+        this.paramInfo = new GoodsParam(
+          result.itemParams.info,
+          result.itemParams.rule
+        );
+
+        //获取评论
+        if (result.rate.cRate != 0) {
+          this.comment = result.rate.list[0];
+        }
       }
     },
+    async getDetailRecommend() {
+      let res = await getDetailRecommend();
+      this.recommend = res.list;
+    },
+
+    /**
+     * 各类事件
+     */
     loadImgOk() {
-      this.func();
+      this.bcFunc();
     },
     scrollOn(pos) {
       this.isShowTop = -pos.y > 1000;
@@ -111,6 +158,7 @@ export default {
   bottom: 2.09rem;
   left: 0;
   right: 0;
+  overflow: hidden;
   /*  height: calc(100% - 200px);
   overflow: hidden; */
 }

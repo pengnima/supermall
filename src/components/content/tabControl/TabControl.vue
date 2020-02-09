@@ -4,6 +4,7 @@
       class="tab_control_item"
       v-for="(item, index) in titles"
       @click="itemClick(index)"
+      :key="index"
     >
       <span :class="{ active: index == currIndex }">{{ item }}</span>
     </div>

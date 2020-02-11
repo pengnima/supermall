@@ -1,22 +1,27 @@
 <template>
   <div id="detail">
-    <detail-nav-bar />
-
+    <detail-nav-bar ref="navBarRef" @itemClickEvent="changeScrollOffset" />
     <scroll
       class="detail_wrapper"
       ref="scroll"
       :probe-type="3"
       @scrollEvent="scrollOn"
     >
-      <detail-swiper :topImgs="topImages" />
+      <detail-swiper :topImgs="topImages" ref="swiperRef" />
       <detail-goods :goods="goods" />
       <detail-shop-info :shop="shop" />
-      <detail-goods-info :detail-info="detailInfo" @loadImgEvent="loadImgOk" />
-      <detail-params :paramInfo="paramInfo" />
-      <detail-comment :comment="comment" />
-      <goods-list :sun_goods="recommend"></goods-list>
+      <detail-goods-info :detailInfo="detailInfo" @loadImgEvent="loadImgOk" />
+      <detail-params :paramInfo="paramInfo" ref="paramsRef" />
+      <detail-comment :comment="comment" ref="commentRef" />
+      <goods-list :sun_goods="recommend" ref="recommendRef"></goods-list>
     </scroll>
-    <back-top v-show="isShowTop" @click.native="backClick" />
+    <transition name="back-top">
+      <back-top v-show="isShowTop" @click.native="backClick" />
+    </transition>
+    <detail-bottom-bar @addEvent="addToCart" />
+    <transition name="add-cart">
+      <div class="add_tip" v-show="isShowTip">已添加至购物车~</div>
+    </transition>
   </div>
 </template>
 <script>
@@ -27,6 +32,7 @@ import DetailShopInfo from "./childComps/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo.vue";
 import DetailParams from "./childComps/DetailParams.vue";
 import DetailComment from "./childComps/DetailComment.vue";
+import DetailBottomBar from "./childComps/DetailBottomBar.vue";
 
 import {
   getDetail,
@@ -37,10 +43,10 @@ import {
 } from "network/detail.js";
 
 import Scroll from "components/common/scroll/Scroll.vue";
-import BackTop from "components/content/backTop/BackTop.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
 
-import { itemListenerMinxin } from "common/mixin.js";
+import { deBounce } from "common/utils.js";
+import { itemListenerMinxin, backTopMinxin } from "common/mixin.js";
 
 export default {
   name: "detail",
@@ -52,9 +58,9 @@ export default {
     DetailGoodsInfo,
     DetailParams,
     DetailComment,
+    DetailBottomBar,
 
     Scroll,
-    BackTop,
 
     GoodsList
   },
@@ -66,9 +72,13 @@ export default {
       shop: {},
       detailInfo: {},
       paramInfo: {},
-      isShowTop: false,
       comment: {},
-      recommend: []
+      recommend: [],
+      theme: ["swiperRef", "paramsRef", "commentRef", "recommendRef"],
+      themePosY: [0],
+      bcFuncTheme: null,
+      detailIndex: 0,
+      isShowTip: false
     };
   },
   created() {
@@ -80,9 +90,19 @@ export default {
     //推荐数据
     this.getDetailRecommend();
   },
-  mixins: [itemListenerMinxin],
+  mixins: [itemListenerMinxin, backTopMinxin],
   mounted() {
     this.$bus.$on("goodsImgLoadEvent", this.bcFunc);
+
+    //给跳转做防抖
+    this.bcFuncTheme = deBounce(() => {
+      this.themePosY = [0];
+      this.themePosY.push(this.$refs.paramsRef.$el.offsetTop);
+      this.themePosY.push(this.$refs.commentRef.$el.offsetTop);
+      this.themePosY.push(this.$refs.recommendRef.$el.offsetTop);
+      this.themePosY.push(Infinity);
+      console.log("处理了一次", this.themePosY);
+    }, 100);
   },
   beforeDestroy() {
     this.$bus.$off("goodsImgLoadEvent", this.bcFunc);
@@ -132,14 +152,44 @@ export default {
     /**
      * 各类事件
      */
+
+    addToCart() {
+      //显示添加成功的提示
+      this.isShowTip = true;
+      setTimeout(() => {
+        this.isShowTip = false;
+      }, 1500);
+      //把信息发送到vuex里
+      const obj = {
+        iid: this.iid,
+        desc: this.goods.desc,
+        price: this.goods.lowNowPrice,
+        title: this.goods.title,
+        img: this.topImages[0]
+      };
+      this.$store.dispatch("ChangeCart", obj);
+    },
+    changeScrollOffset(index) {
+      this.$refs.scroll.scrollToElement(this.$refs[this.theme[index]].$el, 200);
+    },
     loadImgOk() {
       this.bcFunc();
+      this.bcFuncTheme();
     },
     scrollOn(pos) {
       this.isShowTop = -pos.y > 1000;
-    },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
+      for (let i = 0; i < this.themePosY.length - 1; ++i) {
+        if (
+          this.detailIndex != i &&
+          -pos.y >= this.themePosY[i] &&
+          -pos.y < this.themePosY[i + 1]
+        ) {
+          //console.log(i);
+          this.detailIndex = i;
+          this.$refs.navBarRef.currIndex = i;
+          break;
+        }
+      }
     }
   }
 };
@@ -159,7 +209,48 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
-  /*  height: calc(100% - 200px);
-  overflow: hidden; */
+}
+
+/**
+* 给加入购物车做样式即过渡
+*/
+.add_tip {
+  font-size: 0.8rem;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgba(128, 128, 128, 0.9);
+  border-radius: 0.4rem;
+  border: 0.04rem solid rgba(0, 0, 0, 0.4);
+  color: white;
+  top: calc(50% - 3rem);
+}
+.add-cart-enter,
+.add-cart-leave-to {
+  opacity: 0;
+}
+.add-cart-enter-active {
+  transition: opacity 1s;
+}
+.add-cart-leave-active {
+  transition: opacity 1s;
+}
+
+/**
+* 给回到顶部按钮做了一个过渡效果
+*/
+.back-top-enter,
+.back-top-leave-to {
+  transform: translateX(1rem);
+  opacity: 0;
+}
+.back-top-enter-active {
+  transition: all 1s;
+}
+.back-top-leave-active {
+  transition: all 1s;
 }
 </style>

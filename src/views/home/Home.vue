@@ -35,8 +35,9 @@
         <goods-list :sun_goods="goods[this.currType].list" />
       </template>
     </scroll>
-
-    <back-top @click.native="backClick" v-show="isShowBackTop" />
+    <transition name="back-top">
+      <back-top v-show="isShowTop" @click.native="backClick" />
+    </transition>
   </div>
 </template>
 
@@ -53,7 +54,7 @@ import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultiData, getHomeGoods } from "network/home.js";
 
-import { itemListenerMinxin } from "common/mixin.js";
+import { itemListenerMinxin, backTopMinxin } from "common/mixin.js";
 
 export default {
   name: "home",
@@ -62,8 +63,6 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
-
     HomeSwiper,
     HomeRecommends,
     HomeFeature
@@ -78,12 +77,11 @@ export default {
         sell: { page: 0, list: [] }
       },
       currType: "pop",
-      isShowBackTop: false,
       tabControloffsetTop: 0,
       topCheck: false
     };
   },
-  mixins: [itemListenerMinxin],
+  mixins: [itemListenerMinxin, backTopMinxin],
   //利用生命周期函数，组件创建，就发送网络请求
   created() {
     //1.请求多个数据
@@ -106,9 +104,6 @@ export default {
     /**
      * 该组件的事件
      */
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     loadMore() {
       //下拉加载更多goods，但是会有bug，该bug由于DOM高度问题
       //图片的DOM高度是异步加载的，所以没那么快能加载出来，会导致scroll的高度跟不上
@@ -133,7 +128,7 @@ export default {
     },
     contentScroll(pos) {
       //滚动条实时监听
-      this.isShowBackTop = -pos.y > 1000;
+      this.isShowTop = -pos.y > 1000;
       this.topCheck = -pos.y > this.tabControloffsetTop;
     },
     SwiperImgLoad() {
@@ -210,5 +205,20 @@ export default {
   top: 1.9rem;
   bottom: 2.09rem;
   overflow: hidden;
+}
+
+/**
+* 给回到顶部按钮做了一个过渡效果
+*/
+.back-top-enter,
+.back-top-leave-to {
+  transform: translateX(1rem);
+  opacity: 0;
+}
+.back-top-enter-active {
+  transition: all 1s;
+}
+.back-top-leave-active {
+  transition: all 1s;
 }
 </style>

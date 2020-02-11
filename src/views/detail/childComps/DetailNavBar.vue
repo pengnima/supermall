@@ -33,7 +33,8 @@ export default {
   },
   methods: {
     itemClick(index) {
-      this.currIndex = index;
+      // this.currIndex = index; 让滚动自己判断是否红
+      this.$emit("itemClickEvent", index);
     },
     backClick() {
       this.$router.back();
@@ -46,8 +47,8 @@ export default {
 </script>
 <style scoped>
 #detail_nav_bar {
-  position: relative;
-  z-index: 9;
+  /* position: relative; */
+  /* z-index: 9; */
   background-color: #fff;
 }
 .back img {

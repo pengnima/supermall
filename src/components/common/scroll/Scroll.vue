@@ -31,6 +31,9 @@ export default {
     /**
      * BS的一些方法
      */
+    scrollToElement(el, time = 500) {
+      this.scroll.scrollToElement(el, time);
+    },
     scrollTo(x, y, time = 500) {
       this.scroll.scrollTo(x, y, time);
     },

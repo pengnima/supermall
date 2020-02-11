@@ -8,6 +8,7 @@ export function deBounce(func, delay) {
     if (timer) clearTimeout(timer);
 
     timer = setTimeout(() => {
+      //console.log("执行一次");
       func.apply(this, args);
     }, delay);
   };

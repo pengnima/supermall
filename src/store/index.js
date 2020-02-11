@@ -1,17 +1,19 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import actions from "./actions";
+import mutations from "./mutations";
+
 Vue.use(Vuex);
 
+const state = {
+  slideCount: 0,
+  cartList: []
+};
 const store = new Vuex.Store({
-  state: {
-    slideCount: 0
-  },
-  mutations: {
-    slideCountChange(state, num) {
-      state.slideCount += num;
-    }
-  }
+  state,
+  mutations,
+  actions
 });
 
 export default store;

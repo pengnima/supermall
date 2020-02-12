@@ -19,6 +19,9 @@
       <back-top v-show="isShowTop" @click.native="backClick" />
     </transition>
     <detail-bottom-bar @addEvent="addToCart" />
+    <transition name="add-cart">
+      <div class="add_tip" v-show="isShowTip">已添加至购物车~</div>
+    </transition>
   </div>
 </template>
 <script>
@@ -40,7 +43,6 @@ import {
 } from "network/detail.js";
 
 import Scroll from "components/common/scroll/Scroll.vue";
-import Toast from "components/common/toast/Toast.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
 
 import { deBounce } from "common/utils.js";
@@ -59,7 +61,7 @@ export default {
     DetailBottomBar,
 
     Scroll,
-    Toast,
+
     GoodsList
   },
   data() {
@@ -75,7 +77,8 @@ export default {
       theme: ["swiperRef", "paramsRef", "commentRef", "recommendRef"],
       themePosY: [0],
       bcFuncTheme: null,
-      detailIndex: 0
+      detailIndex: 0,
+      isShowTip: false
     };
   },
   created() {
@@ -151,6 +154,11 @@ export default {
      */
 
     addToCart() {
+      //显示添加成功的提示
+      this.isShowTip = true;
+      setTimeout(() => {
+        this.isShowTip = false;
+      }, 1500);
       //把信息发送到vuex里
       const obj = {
         iid: this.iid,
@@ -159,16 +167,8 @@ export default {
         title: this.goods.title,
         img: this.topImages[0]
       };
-      this.$store
-        .dispatch("ChangeCart", obj)
-        .then(() => {
-          this.$toast.show("加入购物车");
-        })
-        .catch(() => {
-          this.$toast.show("购买数量+1");
-        });
+      this.$store.dispatch("ChangeCart", obj);
     },
-
     changeScrollOffset(index) {
       this.$refs.scroll.scrollToElement(this.$refs[this.theme[index]].$el, 200);
     },
@@ -209,6 +209,34 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
+}
+
+/**
+* 给加入购物车做样式即过渡
+*/
+.add_tip {
+  font-size: 0.8rem;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 2rem;
+  height: 2rem;
+  width: 10rem;
+  background-color: rgba(128, 128, 128, 0.9);
+  border-radius: 0.4rem;
+  border: 0.04rem solid rgba(0, 0, 0, 0.4);
+  color: white;
+  top: calc(50% - 3rem);
+}
+.add-cart-enter,
+.add-cart-leave-to {
+  opacity: 0;
+}
+.add-cart-enter-active {
+  transition: opacity 1s;
+}
+.add-cart-leave-active {
+  transition: opacity 1s;
 }
 
 /**

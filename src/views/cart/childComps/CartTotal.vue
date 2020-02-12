@@ -1,12 +1,10 @@
 <template>
   <div id="cart_total">
-    <cart-check-button
-      @click.native="checkClick"
-      :isChecked="checkAll"
-      ref="checkButtonRef"
-    />全选
+    <div @click="checkClick" style="display: flex;">
+      <cart-check-button :isChecked="checkAll" ref="checkButtonRef" />全选
+    </div>
     <div class="calc">总计：￥{{ totalPrice | keep2Decimal }}</div>
-    <div class="buy">去购买({{ totalLength }})</div>
+    <div class="buy" @click="buySth">去购买({{ totalLength }})</div>
   </div>
 </template>
 <script>
@@ -46,14 +44,19 @@ export default {
   },
   methods: {
     checkClick() {
-      if (this.checkAll == true) {
-        this.cartList.forEach(item => {
-          item.checked = false;
-        });
+      /* if (this.checkAll == true) {
+        this.cartList.forEach(item => item.checked = false);
       } else {
-        this.cartList.forEach(item => {
-          item.checked = true;
-        });
+        this.cartList.forEach(item => item.checked = true);
+      } */
+      let checkFlag = !this.checkAll;
+      this.cartList.forEach(item => (item.checked = checkFlag));
+    },
+    buySth() {
+      if (this.totalLength == 0) {
+        this.$toast.show("请选择要购买的商品");
+      } else {
+        //====>购买界面，确认信息
       }
     }
   }

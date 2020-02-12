@@ -109,7 +109,9 @@ export default {
       //图片的DOM高度是异步加载的，所以没那么快能加载出来，会导致scroll的高度跟不上
       //如何解决？
       //让img每次加载完之后，就refresh()一次滚动条
-      this.getHomeGoods(this.currType);
+      if (this.goods[this.currType].page < 2) {
+        this.getHomeGoods(this.currType);
+      }
 
       console.log("上拉了");
       setTimeout(() => {

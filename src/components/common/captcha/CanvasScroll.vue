@@ -39,7 +39,12 @@ export default {
       timer: null,
       obj: null,
       isActive: false,
-      isOpacity: true
+      isOpacity: true,
+
+      /**
+       * 次数，降为0就退出验证码
+       */
+      count: 3
     };
   },
   props: {
@@ -160,22 +165,35 @@ export default {
       }
     },
     pointEnd(e) {
-      if (this.leftBlock >= 3 && this.leftBlock <= 7) {
+      if (this.leftBlock >= 1 && this.leftBlock <= 9) {
         console.log("通过");
+        //发射一个事件总线
+        this.$bus.$emit("captchaEvent");
         return;
       }
-      this.timer = setInterval(() => {
-        if (this.leftPoint >= 0) {
-          this.leftPoint -= 5;
-          this.leftBlock -= 5;
-        } else {
-          this.leftBlock = -this.obj.x + 45;
-          this.isActive = false;
-          this.isOpacity = true;
-          this.zeroPos = null;
-          clearInterval(this.timer);
+
+      //让父组件震动起来
+      this.$parent.isShake = true;
+      this.count--;
+      setTimeout(() => {
+        this.$parent.isShake = false;
+        if (this.count <= 0) {
+          this.$parent.itemClick(false);
+          return;
         }
-      }, 15);
+        this.timer = setInterval(() => {
+          if (this.leftPoint >= 0) {
+            this.leftPoint -= 5;
+            this.leftBlock -= 5;
+          } else {
+            this.leftBlock = -this.obj.x + 45;
+            this.isActive = false;
+            this.isOpacity = true;
+            this.zeroPos = null;
+            clearInterval(this.timer);
+          }
+        }, 15);
+      }, 600);
     }
   }
 };

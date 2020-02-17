@@ -66,8 +66,9 @@ export default {
   },
   created() {},
   mounted() {
-    //把Captcha的isShow设成true，但一进来就给他改成false，避免图片无法出现的问题
-    this.$refs.captchaRef.cancelClick();
+    this.$bus.$on("captchaEvent", () => {
+      this.passCaptcha();
+    });
   },
   computed: {
     isLogin() {
@@ -78,7 +79,7 @@ export default {
     },
     isTrue() {
       for (const key in this.userInfo) {
-        if (this.userInfo[key] == null) {
+        if (this.$refs[key][0].pColor != "green") {
           return false;
         }
       }
@@ -92,12 +93,12 @@ export default {
         if (this.$refs.boxRef.isCheck) {
           console.log("选择了记住密码");
         }
-        this.$refs.captchaRef.cancelClick();
+        this.$refs.captchaRef.itemClick(true);
+        this.$refs.captchaRef.refreshClick();
       }
       //注册
       else {
-        // 1. 检测全部信息是否有填写
-        // this.$refs.myd[0].refTest();
+        // 1. 检测信息冲突等
         this.checkFunc();
       }
     },
@@ -105,28 +106,45 @@ export default {
     checkFunc() {
       if (this.isTrue) {
         if (this.userInfo.password != this.userInfo.re_password) {
-          this.$refs.re_password[0].changeData("请检查密码是否输入正确", "red");
+          console.log(this.userInfo);
+          this.$refs.re_password[0].changeData("输入的密码不一致", "red");
         } else {
-          this.postRegisterUser();
+          this.$refs.captchaRef.itemClick(true);
+          this.$refs.captchaRef.refreshClick();
+          // 如果通过 滑动验证即进入 网络相关 函数
         }
       } else {
-        this.$toast.show("请填写信息", 2000);
+        this.$toast.show("请正确填写信息", 2000);
       }
     },
+    /* ===============================================================用来接受事件总线的方法，即通过验证之后，在发送网络相关的请求 */
     /**
      * 网络相关
      */
     async postRegisterUser() {
       let res = await postRegisterUser(this.userInfo);
-      if (!res) {
-        this.$refs.email[0].changeData("注册失败,用户名或邮箱已被注册", "red");
-        this.$refs.user[0].changeData("注册失败,用户名或邮箱已被注册", "red");
+      if (!res.success) {
+        if (Math.round(res.status / 10) === 1) {
+          this.$refs.email[0].changeData("注册失败,该邮箱已被注册", "red");
+        }
+        if (res.status % 10 === 1) {
+          this.$refs.user[0].changeData("注册失败,该用户名已被注册", "red");
+        }
       } else {
         this.$toast.show("注册成功", 1500);
       }
     },
+    /**
+     * 事件相关
+     */
     blurEvent() {
-      this.userInfo[arguments[0]] = arguments[1] == "" ? null : arguments[1];
+      this.userInfo[arguments[0]] = arguments[1];
+    },
+    passCaptcha() {
+      this.$refs.captchaRef.itemClick(false);
+      if (this.state == false) {
+        this.postRegisterUser();
+      }
     }
   }
 };

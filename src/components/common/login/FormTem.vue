@@ -24,8 +24,7 @@ export default {
   data() {
     return {
       ownMsg: "",
-      pColor: "black",
-      checkResult: false
+      pColor: "black" //在父组件isTrue里用颜色来判断输入是否符合格式
     };
   },
   computed: {
@@ -39,15 +38,12 @@ export default {
   },
   methods: {
     blurInput(e) {
-      if (this.checkResult) {
-        this.$emit("blurEvent", this.idName, e.target.value);
-      }
+      this.$emit("blurEvent", this.idName, e.target.value);
     },
     //改变data的值
-    changeData(str, str2, bool = false) {
+    changeData(str, str2) {
       this.ownMsg = str;
       this.pColor = str2;
-      this.checkResult = bool;
     },
     //检测格式是否正确
     checkFormat(e, name) {
@@ -55,13 +51,15 @@ export default {
       let reg = this.chooseReg(name);
       // 检测格式
       if (reg.test(value)) {
-        this.changeData("输入格式正确", "green", true);
+        this.changeData("输入格式正确", "green");
       } else {
+        console.log("进来了");
         this.changeData("输入格式错误", "red");
       }
 
       if (value === "") {
-        this.changeData("", "black", true);
+        this.changeData("", "black");
+        this.$emit("blurEvent", this.idName, null);
       }
     },
     // 选择对应的正则

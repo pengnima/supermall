@@ -23,11 +23,19 @@
 export default {
   data() {
     return {
+      /**
+       * 控制left的移动
+       */
       leftBlock: 0,
       leftPoint: 0,
-      leftTemp: 0,
-      endPos: 0,
-      moveDis: 0,
+
+      /**
+       * 移动的位置
+       */
+      startPos: null,
+      endPos: null,
+      zeroPos: null,
+
       timer: null,
       obj: null,
       isActive: false,
@@ -41,7 +49,7 @@ export default {
   mounted() {
     let img = document.createElement("img");
     img.src = this.imgSrc;
-    console.log(this.imgSrc);
+    // console.log(this.imgSrc);
 
     let cWidth = document.querySelector("#canvas_scroll").clientWidth;
     let cHeight = document.querySelector("#canvas_scroll").clientHeight;
@@ -56,7 +64,6 @@ export default {
 
       //改变画布 mc2的位置，让其在最左边
       this.leftBlock = -this.obj.x + 45;
-      this.leftTemp = this.leftBlock;
 
       this.strokePicture(ctx, this.obj, img);
       this.strokePicture(ctx2, this.obj, img, true);
@@ -75,8 +82,9 @@ export default {
       mc2.height = mc.height = mcHeight;
 
       //出现拼图的位置，需要用随机数来获取
-      let x = Math.round(Math.random() * 150 + mcWidth / 2); // 170 ~ 320
-      let y = Math.round(Math.random() * 150 + mcHeight / 5);
+      // console.log(mcWidth, mcHeight);
+      let x = Math.round(Math.random() * 120 + mcWidth / 2); // 145 ~ 265
+      let y = Math.round(Math.random() * 120 + mcHeight / 4);
 
       return { x, y, width: mcWidth, height: mcHeight };
     },
@@ -129,20 +137,26 @@ export default {
      * 触屏方法
      */
     pointStart(e) {
-      // console.log(this.imgSrc);
+      this.startPos = e.touches[0].clientX;
+      if (this.zeroPos == null) {
+        this.zeroPos = e.touches[0].clientX;
+      }
+
       this.isActive = true;
       this.isOpacity = false;
       clearInterval(this.timer);
     },
     pointMove(e) {
-      this.endPos = e.touches[0].pageX;
-      let dis = this.endPos - 60;
+      this.endPos = e.touches[0].clientX;
 
-      if (dis >= 0 && dis <= this.obj.width - 50) {
-        this.moveDis = dis;
-        // console.log(this.moveDis);
-        this.leftPoint = this.moveDis;
-        this.leftBlock = this.leftTemp + this.moveDis;
+      let temp = this.endPos - this.zeroPos;
+
+      if (temp >= 0 && temp <= 240) {
+        let dis = this.endPos - this.startPos;
+        this.leftPoint += dis;
+        this.leftBlock += dis;
+        //每次运动完修改 startpos
+        this.startPos = e.touches[0].clientX;
       }
     },
     pointEnd(e) {
@@ -151,13 +165,15 @@ export default {
         return;
       }
       this.timer = setInterval(() => {
-        if (this.moveDis > 0) {
-          this.moveDis -= 5;
-          this.leftPoint = this.moveDis;
-          this.leftBlock = this.leftTemp + this.moveDis;
+        if (this.leftPoint >= 0) {
+          this.leftPoint -= 5;
+          this.leftBlock -= 5;
         } else {
+          this.leftBlock = -this.obj.x + 45;
           this.isActive = false;
           this.isOpacity = true;
+          this.zeroPos = null;
+          clearInterval(this.timer);
         }
       }, 15);
     }
@@ -168,6 +184,7 @@ export default {
 #canvas_scroll {
   width: 100%;
   height: 100%;
+  /* 防止margin-top被重叠 */
   overflow: hidden;
 }
 .canvas_BG {
@@ -182,7 +199,7 @@ export default {
 }
 .point_scroll {
   width: 100%;
-  height: 50px; /* 400-300-10 = 90 取60 */
+  height: 50px;
 }
 .scroll_bar {
   position: relative;
@@ -212,7 +229,7 @@ export default {
   position: absolute;
   color: rgb(87, 87, 87);
   line-height: 40px;
-  left: 106px; /* 宽度的一半 - 字体宽度的一半 */
+  left: calc(50% - 64px); /* 宽度的一半 - 字体宽度的一半 */
 }
 
 /** 

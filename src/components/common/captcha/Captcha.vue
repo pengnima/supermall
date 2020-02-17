@@ -19,7 +19,7 @@ export default {
         require("assets/img/captcha/huaji.jpg"),
         require("assets/img/captcha/huaji2.jpg")
       ],
-      isShow: false
+      isShow: true
     };
   },
   methods: {
@@ -54,14 +54,16 @@ export default {
 .captcha {
   /* width: 350px; */
   /* height: 400px; */
-  width: 350px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
   margin: 50% auto;
 
   background-color: rgba(255, 255, 255, 0.8);
 
   border-radius: 5px;
   position: relative;
+
+  overflow: hidden;
 }
 .cancel {
   position: absolute;

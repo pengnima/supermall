@@ -61,7 +61,7 @@ export default {
       }
 
       if (value === "") {
-        this.changeData("", "black", true);
+        this.changeData("", "black");
       }
     },
     // 选择对应的正则

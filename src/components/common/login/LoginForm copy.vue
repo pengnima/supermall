@@ -6,7 +6,6 @@
         :idName="item.id"
         :msg="item.msg"
         @blurEvent="blurEvent"
-        :ref="item.id"
       />
     </div>
 
@@ -97,36 +96,21 @@ export default {
       //注册
       else {
         // 1. 检测全部信息是否有填写
-        // this.$refs.myd[0].refTest();
-        this.checkFunc();
-      }
-    },
-    //检测用函数
-    checkFunc() {
-      if (this.isTrue) {
-        if (this.userInfo.password != this.userInfo.re_password) {
-          this.$refs.re_password[0].changeData("请检查密码是否输入正确", "red");
+        if (this.isTrue) {
+          console.log("全部有写，进入下一步");
+
+          //检测密码是否一致
+          if (this.userInfo.password != this.userInfo.re_password) {
+            console.log("注册失败，输入密码和重复密码不一致");
+          }
         } else {
-          this.postRegisterUser();
+          console.log("注册失败");
+          console.log(this.userInfo);
         }
-      } else {
-        this.$toast.show("请填写信息", 2000);
-      }
-    },
-    /**
-     * 网络相关
-     */
-    async postRegisterUser() {
-      let res = await postRegisterUser(this.userInfo);
-      if (!res) {
-        this.$refs.email[0].changeData("注册失败,用户名或邮箱已被注册", "red");
-        this.$refs.user[0].changeData("注册失败,用户名或邮箱已被注册", "red");
-      } else {
-        this.$toast.show("注册成功", 1500);
       }
     },
     blurEvent() {
-      this.userInfo[arguments[0]] = arguments[1] == "" ? null : arguments[1];
+      this.userInfo[arguments[0]] = arguments[1];
     }
   }
 };

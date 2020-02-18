@@ -2,14 +2,9 @@
   <div>
     <div id="form_tem">
       <label :for="idName">{{ labelName }}</label>
-      <input
-        :type="checkType"
-        :id="idName"
-        @input="checkFormat($event, idName)"
-        @blur="blurInput"
-      />
+      <input :type="checkType" :id="idName" v-model="myModel" />
     </div>
-    <p :style="{ color: pColor }" v-show="$parent.state == false">
+    <p :style="{ color: pColor }">
       {{ ownMsg || msg }}
     </p>
   </div>
@@ -24,7 +19,8 @@ export default {
   data() {
     return {
       ownMsg: "",
-      pColor: "black" //在父组件isTrue里用颜色来判断输入是否符合格式
+      pColor: "black", //在父组件isTrue里用颜色来判断输入是否符合格式
+      myModel: "" //有了myModel双向绑定，瞅一瞅验证方式是否可以修改
     };
   },
   computed: {
@@ -36,31 +32,26 @@ export default {
       }
     }
   },
+  watch: {
+    myModel() {
+      if (this.chooseReg(this.idName).test(this.myModel)) {
+        this.changeData("输入格式正确", "green");
+      } else {
+        this.changeData("输入格式错误", "red");
+      }
+      if (this.myModel == "") {
+        this.changeData("", "black");
+      }
+      this.$emit("blurEvent", this.idName, this.myModel);
+      console.log("改变了model", this.idName);
+    }
+  },
   methods: {
-    blurInput(e) {
-      this.$emit("blurEvent", this.idName, e.target.value);
-    },
+    blurInput(e) {},
     //改变data的值
     changeData(str, str2) {
       this.ownMsg = str;
       this.pColor = str2;
-    },
-    //检测格式是否正确
-    checkFormat(e, name) {
-      let value = e.target.value;
-      let reg = this.chooseReg(name);
-      // 检测格式
-      if (reg.test(value)) {
-        this.changeData("输入格式正确", "green");
-      } else {
-        console.log("进来了");
-        this.changeData("输入格式错误", "red");
-      }
-
-      if (value === "") {
-        this.changeData("", "black");
-        this.$emit("blurEvent", this.idName, null);
-      }
     },
     // 选择对应的正则
     chooseReg(name) {

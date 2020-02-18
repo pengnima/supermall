@@ -166,9 +166,9 @@ export default {
     },
     pointEnd(e) {
       if (this.leftBlock >= 1 && this.leftBlock <= 9) {
-        console.log("通过");
         //发射一个事件总线
         this.$bus.$emit("captchaEvent");
+        console.log("通过验证码，并发送了一个事件总线");
         return;
       }
 

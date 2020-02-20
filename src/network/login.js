@@ -11,21 +11,33 @@ export function postRegisterUser(userInfo) {
     }
   });
 }
-
-export function postLoginUser(userInfo) {
+// 免登录
+export function postLoginUser(userInfo, isKeep) {
   return request({
     url: "/login",
     method: "post",
     data: {
       user: userInfo.user,
-      password: userInfo.password
+      password: userInfo.password,
+      isKeep
+    }
+  });
+}
+//检查token
+export function postCheckToken({ token, refreshToken }) {
+  return request({
+    url: "/login/check",
+    method: "post",
+    data: {
+      token,
+      refreshToken
     }
   });
 }
 
 export function postForgetUser(userInfo) {
   return request({
-    url: "/login",
+    url: "/login/forget",
     method: "post",
     data: {
       email: userInfo.email

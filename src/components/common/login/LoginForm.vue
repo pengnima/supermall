@@ -22,9 +22,15 @@ import CheckBox from "./CheckBox.vue";
 import Captcha from "components/common/captcha/Captcha.vue";
 
 import { postRegisterUser, postLoginUser } from "network/login.js";
+
+import { CHANGE_UID } from "@/store/mutations_type.js";
+
+import { TK, R_TK, getUid } from "common/const.js";
+
 export default {
   data() {
     return {
+      isKeep: false,
       userInfo: {
         user: "",
         email: "",
@@ -114,6 +120,9 @@ export default {
       if (this.state) {
         if (this.$refs.boxRef.isCheck) {
           console.log("选择了记住密码");
+          this.isKeep = true;
+        } else {
+          this.isKeep = false;
         }
         this.checkLogin();
       }
@@ -126,9 +135,11 @@ export default {
     checkLogin() {
       //1. 检测格式
       if (this.isLoginTrue) {
-        //2. 弹出滑动验证码
-        this.$refs.captchaRef.itemClick(true);
-        this.$refs.captchaRef.refreshClick();
+        //2. 弹出滑动验证码(测试，先把滑动验证码关了)
+        // this.$refs.captchaRef.itemClick(true);
+        // this.$refs.captchaRef.refreshClick();
+
+        this.postLoginUser();
         //3. 通过进入 网络相关 函数
       } else {
         this.$toast.show("请输入账号密码", 2000);
@@ -171,11 +182,23 @@ export default {
     },
     //登录
     async postLoginUser() {
-      let res = await postLoginUser(this.userInfo);
+      let res = await postLoginUser(this.userInfo, this.isKeep);
       if (res) {
         console.log(res);
         this.$toast.show("登录成功", 1500);
-        //this.$router.replace("profile");
+
+        // 设置 storage
+        if (res.refreshToken != null) {
+          localStorage.setItem(TK, res.token);
+          localStorage.setItem(R_TK, res.refreshToken);
+        } else {
+          sessionStorage.setItem(TK, res.token);
+        }
+        // 设置 VueX的uid
+        let uid = getUid();
+        this.$store.commit(CHANGE_UID, uid);
+
+        this.$router.replace("/profile/" + uid);
       } else {
         // this.$toast.show("账号或密码错误", 1500);
         this.$refs.user[0].changeData("用户名或密码错误", "red");

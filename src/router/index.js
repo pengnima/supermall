@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { TK, R_TK, getUid, getToken } from "common/const.js";
+import { postCheckToken } from "network/login.js";
 
 Vue.use(VueRouter);
 
@@ -26,7 +28,35 @@ const routes = [
   {
     path: "/profile",
     name: "profile",
-    component: () => import("views/profile/Profile.vue")
+    beforeEnter(to, from, next) {
+      let uid = getUid();
+      console.log(uid);
+      if (uid) {
+        next("/profile/" + uid);
+      } else {
+        next("/login");
+      }
+    }
+  },
+  {
+    path: "/profile/:uid",
+    name: "profile_uid",
+    component: () => import("views/profile/Profile.vue"),
+    beforeEnter(to, from, next) {
+      //发送请求，检验token
+      if (getToken().token != null) {
+        postCheckToken(getToken())
+          .then(res => {
+            console.log(res);
+            next();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        next("/login");
+      }
+    }
   },
   {
     path: "/detail/:iid",

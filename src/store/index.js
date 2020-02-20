@@ -8,7 +8,8 @@ Vue.use(Vuex);
 
 const state = {
   slideCount: 0,
-  cartList: []
+  cartList: [],
+  uid: ""
 };
 const store = new Vuex.Store({
   state,

@@ -16,7 +16,7 @@ export default {
     return {
       uBaseInfo: {
         //通过uid到达用户的个人界面
-        uid: "7654321",
+        uid: "",
         uname: "彭尼玛2020",
         uavatar: require("assets/img/profile/avatar.svg")
       }
@@ -26,6 +26,10 @@ export default {
     UserBar,
     OrderBar,
     OptionBar
+  },
+  created() {
+    this.uBaseInfo.uid = this.$route.params.uid;
+    console.log(this.uBaseInfo.uid);
   }
 };
 </script>

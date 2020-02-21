@@ -34,9 +34,10 @@ export default {
   methods: {
     itemClick() {
       /* 通过父组件传值给子组件，改变其path属性 */
-      if (this.$route.path != this.path) {
+      // console.log(this.$route.path, this.path);
+      if (this.$route.path.indexOf(this.path) == -1) {
         this.$router.push(this.path).catch(err => {
-          console.log(err);
+          console.log("路由切换问题ERROR");
         });
       }
     }

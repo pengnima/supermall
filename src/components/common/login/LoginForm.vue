@@ -180,12 +180,14 @@ export default {
         this.$toast.show("注册成功", 1500);
       }
     },
+
     //登录
     async postLoginUser() {
       let res = await postLoginUser(this.userInfo, this.isKeep);
       if (res) {
-        console.log(res);
         this.$toast.show("登录成功", 1500);
+        this.$refs.user[0].myModel = "";
+        this.$refs.password[0].myModel = "";
 
         // 设置 storage
         if (res.refreshToken != null) {
@@ -204,7 +206,6 @@ export default {
         this.$refs.user[0].changeData("用户名或密码错误", "red");
         this.$refs.password[0].changeData("用户名或密码错误", "red");
       }
-      //user  password
     },
     /**
      * 事件相关

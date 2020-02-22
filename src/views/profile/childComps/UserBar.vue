@@ -3,7 +3,7 @@
     <div class="link_BG">
       <a href="转到个人用户界面">
         <div class="avatar">
-          <img :src="uBaseInfo.uavatar" class="avatar_img" />
+          <img :src="uImg" class="avatar_img" />
           <img src="~assets/img/profile/vipnum_72x72.png" class="vip_sign" />
         </div>
       </a>
@@ -27,6 +27,16 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    uImg() {
+      if (this.uBaseInfo.uavatar != "") {
+        console.log(this.uBaseInfo.uavatar); //"assets/img/profile/avatar.svg"
+
+        return require("@/" + this.uBaseInfo.uavatar);
+        //return require("assets/img/profile/avatar.svg");
+      }
+    }
   }
 };
 </script>

@@ -1,17 +1,22 @@
 <template>
-  <div id="profile">
+  <div id="profile" v-if="uBaseInfo != null">
     <user-bar :uBaseInfo="uBaseInfo"></user-bar>
     <order-bar :uid="uBaseInfo.uid"></order-bar>
     <option-bar :uid="uBaseInfo.uid"></option-bar>
     <div class="login_out" @click="quitClick">退出账号</div>
+  </div>
+  <div v-else>
+    <h2>没有该用户数据</h2>
   </div>
 </template>
 <script>
 import UserBar from "./childComps/UserBar.vue";
 import OrderBar from "./childComps/OrderBar.vue";
 import OptionBar from "./childComps/OptionBar.vue";
+
 import { removeToken, getToken, getUid } from "common/const.js";
 import { postQuitLogin } from "network/login.js";
+import { getProfileInfo } from "network/profile.js";
 
 export default {
   data() {
@@ -19,8 +24,8 @@ export default {
       uBaseInfo: {
         //通过uid到达用户的个人界面
         uid: "",
-        uname: "彭尼玛2020",
-        uavatar: require("assets/img/profile/avatar.svg")
+        uname: "",
+        uavatar: ""
       }
     };
   },
@@ -31,16 +36,20 @@ export default {
   },
   created() {
     this.uBaseInfo.uid = this.$route.params.uid;
+    //将该uid传给后台，去寻找uid的各种数据
+    this.getProfileInfo(this.uBaseInfo.uid);
+
+    //如果 token里的uid 和 路径中的uid一致，则表示是自己的账号
     console.log(this.uBaseInfo.uid);
+    console.log(this.uBaseInfo.uavatar);
+    console.log(this.uBaseInfo.uname);
   },
   methods: {
     quitClick() {
       //1. 让服务器记录当前的token的第三条字段signature
       this.quitLogin();
-
       //2. 清除当前的storage
       removeToken();
-
       //3. 路由跳转到登录界面
       this.$router.replace("/login");
     },
@@ -53,6 +62,16 @@ export default {
       } else {
         console.log("记录失败");
       }
+    },
+    async getProfileInfo(uid) {
+      let res = await getProfileInfo(uid);
+      if (!res.success) {
+        this.uBaseInfo = null;
+      } else {
+        this.uBaseInfo.uavatar = res.data.uImg;
+        this.uBaseInfo.uname = res.data.name;
+      }
+      console.log(this.uBaseInfo);
     }
   }
 };

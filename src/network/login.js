@@ -35,6 +35,18 @@ export function postCheckToken({ token, refreshToken }) {
   });
 }
 
+export function postQuitLogin(uid, { token, refreshToken }) {
+  return request({
+    url: "/login/quit",
+    method: "post",
+    data: {
+      uid,
+      token,
+      refreshToken
+    }
+  });
+}
+
 export function postForgetUser(userInfo) {
   return request({
     url: "/login/forget",

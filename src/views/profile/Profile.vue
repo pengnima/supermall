@@ -3,13 +3,15 @@
     <user-bar :uBaseInfo="uBaseInfo"></user-bar>
     <order-bar :uid="uBaseInfo.uid"></order-bar>
     <option-bar :uid="uBaseInfo.uid"></option-bar>
-    <div class="login_out">退出账号</div>
+    <div class="login_out" @click="quitClick">退出账号</div>
   </div>
 </template>
 <script>
 import UserBar from "./childComps/UserBar.vue";
 import OrderBar from "./childComps/OrderBar.vue";
 import OptionBar from "./childComps/OptionBar.vue";
+import { removeToken, getToken, getUid } from "common/const.js";
+import { postQuitLogin } from "network/login.js";
 
 export default {
   data() {
@@ -30,6 +32,28 @@ export default {
   created() {
     this.uBaseInfo.uid = this.$route.params.uid;
     console.log(this.uBaseInfo.uid);
+  },
+  methods: {
+    quitClick() {
+      //1. 让服务器记录当前的token的第三条字段signature
+      this.quitLogin();
+
+      //2. 清除当前的storage
+      removeToken();
+
+      //3. 路由跳转到登录界面
+      this.$router.replace("/login");
+    },
+    async quitLogin() {
+      let allToken = getToken();
+      let res = await postQuitLogin(getUid(), allToken);
+      if (res) {
+        //成功记录了uinfor里的 token
+        console.log("成功记录");
+      } else {
+        console.log("记录失败");
+      }
+    }
   }
 };
 </script>

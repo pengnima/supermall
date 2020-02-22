@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { TK, R_TK, getUid, getToken } from "common/const.js";
+import { TK, R_TK, getUid, getToken, removeToken } from "common/const.js";
 import { postCheckToken } from "network/login.js";
 
 Vue.use(VueRouter);
@@ -78,8 +78,7 @@ function routerCheckToken(token, next) {
       //3. 长期token过期 或 没有长期token且过期了
       if (res.isExpire == true) {
         console.log("重新登录");
-        localStorage.clear();
-        sessionStorage.clear();
+        removeToken();
         next("/login");
       } else {
         //有newToken表示这是一个 长期token

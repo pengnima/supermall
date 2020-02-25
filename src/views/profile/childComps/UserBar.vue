@@ -32,7 +32,6 @@ export default {
     uImg() {
       if (this.uBaseInfo.uavatar != "") {
         console.log(this.uBaseInfo.uavatar); //"assets/img/profile/avatar.svg"
-
         return require("@/" + this.uBaseInfo.uavatar);
         //return require("assets/img/profile/avatar.svg");
       }

@@ -1,12 +1,7 @@
 <template>
   <div id="detail">
     <detail-nav-bar ref="navBarRef" @itemClickEvent="changeScrollOffset" />
-    <scroll
-      class="detail_wrapper"
-      ref="scroll"
-      :probe-type="3"
-      @scrollEvent="scrollOn"
-    >
+    <scroll class="detail_wrapper" ref="scroll" :probe-type="3" @scrollEvent="scrollOn">
       <detail-swiper :topImgs="topImages" ref="swiperRef" />
       <detail-goods :goods="goods" />
       <detail-shop-info :shop="shop" />
@@ -98,7 +93,7 @@ export default {
       this.themePosY.push(this.$refs.commentRef.$el.offsetTop);
       this.themePosY.push(this.$refs.recommendRef.$el.offsetTop);
       this.themePosY.push(Infinity);
-      console.log("处理了一次", this.themePosY);
+      // console.log("处理了一次", this.themePosY);
     }, 100);
   },
   beforeDestroy() {

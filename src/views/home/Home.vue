@@ -21,17 +21,10 @@
       @pullingUpEvent="loadMore"
     >
       <template>
-        <home-swiper
-          :sun_banners="banners"
-          @SwiperImgLoadEvent="SwiperImgLoad"
-        />
+        <home-swiper :sun_banners="banners" @SwiperImgLoadEvent="SwiperImgLoad" />
         <home-recommends :sun_recommends="recommends" />
         <home-feature />
-        <tab-control
-          :titles="['流行', '新款', '潮流']"
-          @tabEvent="tabClick"
-          ref="tabControl1"
-        />
+        <tab-control :titles="['流行', '新款', '潮流']" @tabEvent="tabClick" ref="tabControl1" />
         <goods-list :sun_goods="goods[this.currType].list" />
       </template>
     </scroll>
@@ -90,9 +83,13 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+
+    console.log("进入home");
   },
   mounted() {},
   activated() {
+    //this.bcFunc 混入进来的
+    console.log(this.bcFunc);
     this.$bus.$on("goodsImgLoadEvent", this.bcFunc);
   },
   deactivated() {
